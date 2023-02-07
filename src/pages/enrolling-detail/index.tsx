@@ -1,18 +1,18 @@
-import { Button, Select } from 'antd';
+import { Button, Select, message } from 'antd';
 import ContentField from 'components/content/ContentField';
 import SectionHeader from 'components/section-header/SectionHeader';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'stores';
 import {
 	fetchEnrollingStudentDetail,
 	selectEnrollingStudentDetail,
+	updateStatusEnrollingStudent,
 } from 'stores/slices/enrollingStudentSlice';
 
-type Props = {};
-
-function RegisterPage({}: Props) {
+function RegisterPage() {
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const { id } = useParams();
 
 	const enrollingStudent = useAppSelector(selectEnrollingStudentDetail);
@@ -24,9 +24,27 @@ function RegisterPage({}: Props) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
-	const handleApproveStudent = () => {};
+	const handleApproveStudent = () => {
+		if (id) {
+			dispatch(
+				updateStatusEnrollingStudent({ id: id, status: 'approved' })
+			).then(() => {
+				message.success('Cập nhật thành công');
+				navigate('/');
+			});
+		}
+	};
 
-	const handleRejectStudent = () => {};
+	const handleRejectStudent = () => {
+		if (id) {
+			dispatch(
+				updateStatusEnrollingStudent({ id: id, status: 'rejected' })
+			).then(() => {
+				message.success('Cập nhật thành công');
+				navigate('/');
+			});
+		}
+	};
 
 	return (
 		<>
@@ -112,11 +130,7 @@ function RegisterPage({}: Props) {
 						>
 							Từ chối
 						</Button>
-						<Button
-							type="primary"
-							name="approve"
-							onClick={handleApproveStudent}
-						>
+						<Button type="primary" onClick={handleApproveStudent}>
 							Duyệt thí sinh
 						</Button>
 					</div>

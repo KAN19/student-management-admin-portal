@@ -12,3 +12,8 @@ export interface EnrollingStudent {
 }
 
 export type EnrollingStudentRequest = Omit<EnrollingStudent, 'id' | 'status'>;
+
+export type UpdateStatusEnrollingStudentType = {
+	id: string;
+	status: string;
+};

@@ -42,11 +42,11 @@ function Home() {
 			dataIndex: 'status',
 			render: (_, { enrollingStatus }) => {
 				const color =
-					enrollingStatus === 'APRROVED'
-						? 'green'
+					enrollingStatus === 'APPROVED'
+						? 'success'
 						: enrollingStatus === 'PENDING'
-						? 'orange'
-						: 'red';
+						? 'processing'
+						: 'error';
 				return <Tag color={color}>{enrollingStatus.toLowerCase()}</Tag>;
 			},
 		},

@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { enrollingStudentApi } from 'api/enrollingStudentApi';
-import { EnrollingStudent } from 'models/enrollingStudent';
+import {
+	EnrollingStudent,
+	UpdateStatusEnrollingStudentType,
+} from 'models/enrollingStudent';
 import { AppRootState } from 'stores';
 
 const initialState = {
@@ -14,6 +17,7 @@ export const fetchEnrollingStudent = createAsyncThunk(
 	async (params: any, thunkAPI) => {
 		try {
 			const response = await enrollingStudentApi.getAll(params);
+			console.log(response?.data);
 			return response;
 		} catch (error) {
 			const message = 'Error Message';
@@ -35,6 +39,19 @@ export const fetchEnrollingStudentDetail = createAsyncThunk(
 	}
 );
 
+export const updateStatusEnrollingStudent = createAsyncThunk(
+	'enrollingStudent/update-status',
+	async ({ id, status }: UpdateStatusEnrollingStudentType, thunkAPI) => {
+		try {
+			const response = await enrollingStudentApi.updateStatus(id, status);
+			return response;
+		} catch (error) {
+			const message = 'Error Message';
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const enrollingStudentSlice = createSlice({
 	name: 'enollingStudent',
 	initialState,
@@ -47,7 +64,6 @@ const enrollingStudentSlice = createSlice({
 			.addCase(fetchEnrollingStudent.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.listEnrollingStudent = action.payload.data;
-				console.log(action.payload.data);
 			})
 			.addCase(fetchEnrollingStudent.rejected, (state) => {
 				state.status = 'failed';

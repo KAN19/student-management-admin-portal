@@ -9,4 +9,8 @@ export const enrollingStudentApi = {
 		const url = `/enrolling/${id}`;
 		return axiosClient.get(url);
 	},
+	updateStatus: (id: string, status: string) => {
+		const url = `/enrolling/update-status/${id}`;
+		return axiosClient.put(url, { status: status });
+	},
 };
