@@ -5,4 +5,8 @@ export const enrollingStudentApi = {
 		const url = '/enrolling';
 		return axiosClient.get(url, { params });
 	},
+	getById: (id: string) => {
+		const url = `/enrolling/${id}`;
+		return axiosClient.get(url);
+	},
 };

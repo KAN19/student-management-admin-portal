@@ -5,7 +5,7 @@ import { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const Home = lazy(() => import('pages/homepage'));
-const RegisterPage = lazy(() => import('pages/register-page'));
+const RegisterPage = lazy(() => import('pages/enrolling-detail'));
 
 function RouterApp() {
 	return (

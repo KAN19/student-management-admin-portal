@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { enrollingStudentApi } from 'api/enrollingStudentApi';
-import {
-	EnrollingStudent,
-	EnrollingStudentRequest,
-} from 'models/enrollingStudent';
+import { EnrollingStudent } from 'models/enrollingStudent';
 import { AppRootState } from 'stores';
 
 const initialState = {
 	status: 'idle' || 'loading' || 'succeeded' || 'failed',
 	listEnrollingStudent: [] as EnrollingStudent[],
+	enrollingStudent: {} as EnrollingStudent,
 };
 
 export const fetchEnrollingStudent = createAsyncThunk(
@@ -16,6 +14,19 @@ export const fetchEnrollingStudent = createAsyncThunk(
 	async (params: any, thunkAPI) => {
 		try {
 			const response = await enrollingStudentApi.getAll(params);
+			return response;
+		} catch (error) {
+			const message = 'Error Message';
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const fetchEnrollingStudentDetail = createAsyncThunk(
+	'enrollingStudent/enrollingStudentDetail',
+	async (id: string, thunkAPI) => {
+		try {
+			const response = await enrollingStudentApi.getById(id);
 			return response;
 		} catch (error) {
 			const message = 'Error Message';
@@ -41,10 +52,25 @@ const enrollingStudentSlice = createSlice({
 			.addCase(fetchEnrollingStudent.rejected, (state) => {
 				state.status = 'failed';
 			});
+		builder
+			.addCase(fetchEnrollingStudentDetail.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchEnrollingStudentDetail.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.enrollingStudent = action.payload.data;
+				console.log(action.payload.data);
+			})
+			.addCase(fetchEnrollingStudentDetail.rejected, (state) => {
+				state.status = 'failed';
+			});
 	},
 });
 
 export const selectListEnrollingStudent = (state: AppRootState) =>
 	state.enrollingStudentSlice.listEnrollingStudent;
+
+export const selectEnrollingStudentDetail = (state: AppRootState) =>
+	state.enrollingStudentSlice.enrollingStudent;
 
 export default enrollingStudentSlice.reducer;
